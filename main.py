@@ -1,11 +1,29 @@
 import csv
+import argparse
 
 
 SEARCHERS_PATH = 'searchers.csv'
 
 
 def read_params():
-    pass
+    parser = argparse.ArgumentParser(description='Filling regular search result'
+                                     ' in Google Analytics')
+    parser.add_argument(
+        '-a',
+        '--account',
+        type=str,
+        default=None,
+        help='Specify the account to fill in'
+    )
+    parser.add_argument(
+        '-s',
+        '--silent',
+        type=bool,
+        default=False,
+        help='Specify True to see the filling process'
+    )
+    namespace = parser.parse_args()
+    print(namespace)
 
 
 def fill_google_analytics():
@@ -21,4 +39,5 @@ def fill_google_analytics():
 
 
 if __name__ == "__main__":
+    read_params()
     fill_google_analytics()
