@@ -20,7 +20,12 @@ def fill_google_analytics():
                     try:
                         keyboard.write(row['Parameter'], delay=0.1)
                     except StopIteration:
-                        print(f'Допиши параметр руками: {row["Parameter"]}')
+                        print(f'Допиши параметр руками: {row["Parameter"]}'
+                              ' и нажми Enter')
+                        while True:
+                            if (keyboard.is_pressed('return') and
+                                    not keyboard.is_pressed('m')):
+                                break
                     keyboard.send('Tab')
                     keyboard.send('Tab')
                     keyboard.send('Return')
