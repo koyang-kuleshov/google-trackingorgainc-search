@@ -3,6 +3,8 @@ import argparse
 from random import randint
 from time import sleep
 
+import mouse
+
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.firefox.options import Options
@@ -31,7 +33,8 @@ def read_params():
         help='Google Analytics login'
     )
     parser.add_argument(
-        'account',
+        '-a',
+        '--account',
         type=str,
         default=None,
         help='Specify the account to fill in'
@@ -63,6 +66,8 @@ def wait_class(c_name="ga-footer-links"):
 
 def fill_google_analytics(login, passwd, account):
     driver.get(START_URL)
+    driver.maximize_window()
+    sleep(3)
     login_elem = driver.find_element_by_id(LOGIN_ID)
     login_elem.click()
     login_elem.send_keys(login)
@@ -83,22 +88,23 @@ def fill_google_analytics(login, passwd, account):
     sleep(3)
     driver.get(admin_url)
     wait_class('ID-adminTable')
-    # print(driver.find_element_by_xpath('//div[@class="ID-adminTable"'))
     try:
         with open(SEARCHERS_PATH, 'r') as r_file:
             dict_reader = csv.DictReader(r_file, delimiter=',')
             for count, row in enumerate(dict_reader, 1):
                 # ID-shortcutAction ACTION-action TARGET-addOrganicSearchClicked _GAYe _GAgib _GAy
                 print(f'[{count}:] {row["Domain"]}?{row["Parameter"]}')
-                sleep(5)
-                button = driver.find_element_by_xpath(
-                    # '//input[@type="submit"]'
-                    # '//input[@class="ID-shortcutAction"]'
-                    '//div[@id="ID-m-content-content-tableControl"]'
-                )
-                # for i, e in enumerate(button):
-                #     print(f'{i} - {e}')
-                button.click()
+                sleep(3)
+                action = webdriver.ActionChains(driver)
+                button = driver.find_element_by_tag_name('body')
+                mouse.move(2244, 582, absolute=True, duration=1)
+                # mouse.click('left')
+                # print(button)
+                # action.move_by_offset(508, 373)
+                action.click()
+                action.perform()
+                spam = input('Waiting...')
+                # button.click()
                 wait_class('W_DECORATE_ELEMENT')
                 domain = driver.find_element_by_xpath(
                     '//input[@data-name="domainName"]')
