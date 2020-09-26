@@ -14,25 +14,26 @@ def fill_google_analytics():
             print(f'[{count}] {row["Domain"]}?{row["Parameter"]}')
             while True:
                 if keyboard.is_pressed('ctrl'):
+                    keyboard.send('tab')
+                    keyboard.send('tab')
                     sleep(0.3)
-                    keyboard.write(row['Domain'], delay=0)
+                    keyboard.write(row['Domain'], delay=0.05)
                     keyboard.send('Tab')
+                    # TODO: Change to using clipboard
                     try:
                         keyboard.write(row['Parameter'], delay=0.1)
-                    except StopIteration:
+                    except Exception:
                         print(f'Допиши параметр руками: {row["Parameter"]}'
                               ' и нажми Enter')
-                        while True:
-                            if (keyboard.is_pressed('return') and
-                                    not keyboard.is_pressed('m')):
-                                break
                     keyboard.send('Tab')
                     keyboard.send('Tab')
                     keyboard.send('Return')
                     break
                 if keyboard.is_pressed('esc'):
+                    break
                     sys.exit(1)
     print('Task done')
+    sys.exit(1)
 
 
 if __name__ == "__main__":
