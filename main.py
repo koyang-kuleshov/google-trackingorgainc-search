@@ -2,34 +2,46 @@ import sys
 import csv
 from time import sleep
 
-import keyboard
+from pynput import keyboard
 
-SEARCHERS_PATH = 'searchers.csv'
+
+SEARCHERS_PATH = 'searchers1.csv'
+WHITE_BUTTON_COORD = (2175, 493)
+WHITE_BUTTON_COLOR = [255, 255, 255]  # RGB
+BLUE_BUTT0N_COORD = (2175, 750)
+BLUE_BUTTON_COLOR = [74, 140, 248]  # RGB
 
 
 def fill_google_analytics():
+    kb = keyboard.Controller()
+    # while True:
+    #     print('White')
+    #     print('Blue')
     with open(SEARCHERS_PATH, 'r') as r_file:
         dict_reader = csv.DictReader(r_file, delimiter=',')
         for count, row in enumerate(dict_reader, 1):
             print(f'[{count}] {row["Domain"]}?{row["Parameter"]}')
             while True:
-                if keyboard.is_pressed('ctrl'):
-                    keyboard.send('tab')
-                    keyboard.send('tab')
+                with keyboard.Events() as events:
+                    event = events.get()
+                if event.key == keyboard.Key.ctrl:
                     sleep(0.3)
-                    keyboard.write(row['Domain'], delay=0.05)
-                    keyboard.send('Tab')
-                    # TODO: Change to using clipboard
-                    try:
-                        keyboard.write(row['Parameter'], delay=0.1)
-                    except Exception:
-                        print(f'Допиши параметр руками: {row["Parameter"]}'
-                              ' и нажми Enter')
-                    keyboard.send('Tab')
-                    keyboard.send('Tab')
-                    keyboard.send('Return')
+                    kb.press(keyboard.Key.tab)
+                    kb.release(keyboard.Key.tab)
+                    kb.press(keyboard.Key.tab)
+                    kb.release(keyboard.Key.tab)
+                    kb.type(row['Domain'])
+                    kb.press(keyboard.Key.tab)
+                    kb.release(keyboard.Key.tab)
+                    kb.type(row.get('Parameter'))
+                    kb.press(keyboard.Key.tab)
+                    kb.release(keyboard.Key.tab)
+                    kb.press(keyboard.Key.tab)
+                    kb.release(keyboard.Key.tab)
+                    kb.press(keyboard.Key.enter)
+                    kb.release(keyboard.Key.enter)
                     break
-                if keyboard.is_pressed('esc'):
+                elif event.key == keyboard.Key.esc:
                     break
                     sys.exit(1)
     print('Task done')
